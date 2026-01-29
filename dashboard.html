@@ -1,166 +1,232 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SIAC - Unifranz</title>
-    <style>
-        :root {
-            --bg-body: #0d1117;
-            --bg-sidebar: #161b22;
-            --naranja: #f05a28;
-            --verde: #00a859;
-            --azul-lab: #2188ff;
-            --texto: #ffffff;
-            --borde: #30363d;
-            --tarjeta: #21262d;
-        }
-
-        body { 
-            margin: 0; 
-            display: flex; 
-            font-family: 'Segoe UI', sans-serif; 
-            background-color: var(--bg-body); 
-            color: var(--texto); 
-            height: 100vh;
-        }
-
-        /* SIDEBAR RESPONSIVO */
-        .sidebar { 
-            width: 260px; 
-            background-color: var(--bg-sidebar); 
-            border-right: 1px solid var(--borde); 
-            display: flex; 
-            flex-direction: column;
-            transition: 0.3s;
-        }
-
-        .user-panel { padding: 20px; text-align: center; border-bottom: 1px solid var(--borde); }
-        .avatar { width: 50px; height: 50px; background: var(--naranja); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-
-        .nav-menu { flex: 1; }
-        .menu-item { padding: 15px; color: #8b949e; cursor: pointer; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.02); }
-        .menu-item.active { background: rgba(240, 90, 40, 0.1); color: var(--naranja); border-right: 4px solid var(--naranja); }
-
-        /* CONTENIDO PRINCIPAL */
-        .main-content { flex: 1; padding: 20px; overflow-y: auto; width: 100%; }
-        .section { display: none; }
-        .section.active { display: block; }
-
-        /* TARJETAS RESPONSIVAS */
-        .welcome-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
-            gap: 15px; 
-            margin-top: 20px; 
-        }
-        .info-card { background: var(--tarjeta); padding: 15px; border-radius: 10px; border-top: 3px solid var(--naranja); text-align: center; }
-
-        /* TABLAS QUE NO SE DEFORMAN */
-        .table-container { 
-            background: var(--bg-sidebar); 
-            border-radius: 10px; 
-            border: 1px solid var(--borde); 
-            overflow-x: auto; /* Esto permite deslizar la tabla con el dedo */
-            margin-top: 20px;
-            -webkit-overflow-scrolling: touch;
-        }
-        table { width: 100%; border-collapse: collapse; min-width: 800px; }
-        th, td { padding: 10px; border: 1px solid var(--borde); text-align: center; font-size: 0.8rem; }
-        .subject-name { text-align: left; min-width: 180px; }
-
-        /* DISEÑO PARA CELULARES (MEDIA QUERY) */
-        @media (max-width: 768px) {
-            body { flex-direction: column; } /* Pone el menú arriba y contenido abajo */
-            .sidebar { 
-                width: 100%; 
-                height: auto; 
-                border-right: none; 
-                border-bottom: 1px solid var(--borde); 
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Portal Estudiantil | UNIFRANZ</title>
+        <style>
+            :root {
+                --bg-body: #0d1117;
+                --bg-sidebar: #161b22;
+                --naranja: #f05a28;
+                --verde: #00a859;
+                --azul-lab: #2188ff;
+                --texto: #ffffff;
+                --borde: #30363d;
+                --tarjeta: #21262d;
+                --bg-tabla: #1c2128;
             }
-            .user-panel { padding: 10px; display: flex; align-items: center; justify-content: space-around; }
-            .user-panel h2, .avatar { margin-bottom: 0; }
-            .nav-menu { display: flex; justify-content: space-around; }
-            .menu-item { padding: 10px; font-size: 0.8rem; border-right: none; border-bottom: none; flex-direction: column; gap: 5px; }
-            .menu-item.active { border-right: none; border-bottom: 3px solid var(--naranja); }
-            .main-content { padding: 15px; }
-            h1 { font-size: 1.4rem; }
-        }
-    </style>
-</head>
-<body>
 
-    <div class="sidebar">
-        <div class="user-panel">
-            <h2 style="color: white; font-size: 1rem;">UNIFRANZ SIAC</h2>
-            <div class="avatar" id="avatarInit">U</div>
-            <span id="userName" style="color: var(--naranja); font-size: 0.9rem;">Usuario</span>
-        </div>
-        <div class="nav-menu">
-            <div class="menu-item active" onclick="showSection('inicio', this)">🏠<span>Inicio</span></div>
-            <div class="menu-item" onclick="showSection('calificaciones', this)">📊<span>Notas</span></div>
-            <div class="menu-item" onclick="showSection('horarios', this)">📅<span>Horario</span></div>
-        </div>
-    </div>
+            body { 
+                margin: 0; 
+                display: flex; 
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+                background-color: var(--bg-body); 
+                color: var(--texto); 
+                height: 100vh; 
+                overflow: hidden; 
+            }
 
-    <div class="main-content">
-        
-        <div id="inicio" class="section active">
-            <h1>Panel de Control</h1>
-            <div class="welcome-grid">
-                <div class="info-card"><h3>Promedio</h3><p>77.8</p></div>
-                <div class="info-card"><h3>Materias</h3><p>5</p></div>
-                <div class="info-card"><h3>Sede</h3><p>El Alto</p></div>
+            /* --- BOTÓN MENÚ MÓVIL (HAMBURGUESA) --- */
+            .menu-toggle {
+                display: none;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                z-index: 1001;
+                background: var(--naranja);
+                color: white;
+                border: none;
+                padding: 10px 15px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: bold;
+            }
+
+            /* --- SIDEBAR --- */
+            .sidebar { 
+                width: 260px; 
+                background-color: var(--bg-sidebar); 
+                border-right: 1px solid var(--borde); 
+                display: flex; 
+                flex-direction: column;
+                transition: transform 0.3s ease;
+                flex-shrink: 0;
+                z-index: 1000;
+            }
+
+            .user-panel { padding: 40px 20px; text-align: center; border-bottom: 1px solid var(--borde); }
+            .avatar { width: 60px; height: 60px; background: var(--naranja); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; }
+            .user-panel span { color: var(--naranja); font-weight: bold; display: block; margin-top: 5px; }
+
+            .nav-menu { flex: 1; padding-top: 20px; }
+            .menu-item { 
+                padding: 15px 25px; 
+                color: #8b949e; 
+                cursor: pointer; 
+                display: flex; align-items: center; gap: 12px;
+                transition: 0.3s;
+            }
+            .menu-item:hover, .menu-item.active { background: rgba(240, 90, 40, 0.1); color: var(--naranja); border-right: 4px solid var(--naranja); font-weight: bold; }
+
+            /* --- CONTENIDO --- */
+            .main-content { flex: 1; padding: 40px; overflow-y: auto; }
+            .section { display: none; }
+            .section.active { display: block; animation: fadeIn 0.4s ease; }
+
+            @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+            /* --- TABLA DE CALIFICACIONES --- */
+            .table-container { background: var(--bg-sidebar); border-radius: 10px; padding: 20px; border: 1px solid var(--borde); overflow-x: auto; margin-top: 20px; }
+            .grade-table { width: 100%; border-collapse: collapse; min-width: 1000px; }
+            .grade-table th { color: var(--naranja); padding: 12px; border-bottom: 2px solid var(--borde); font-size: 0.8rem; }
+            .grade-table td { padding: 12px; border-bottom: 1px solid var(--borde); text-align: center; font-size: 0.85rem; }
+            .subject-name { text-align: left; font-weight: 500; }
+            .final-grade { font-weight: bold; color: var(--verde); }
+
+            /* --- DISEÑO DE HORARIO (COMO IMAGEN) --- */
+            .horario-container { background: var(--bg-tabla); border-radius: 8px; padding: 20px; border: 1px solid var(--borde); overflow-x: auto; }
+            .horario-table { width: 100%; border-collapse: collapse; min-width: 900px; }
+            .horario-table th { color: var(--naranja); padding: 15px; font-size: 0.8rem; border-bottom: 1px solid var(--borde); }
+            .horario-table td { height: 90px; border: 1px solid var(--borde); vertical-align: middle; text-align: center; font-size: 0.8rem; padding: 5px; }
+            
+            .materia-cell { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 5px; border-radius: 4px; }
+            .teoria { background: rgba(240, 90, 40, 0.15); border-left: 4px solid var(--naranja); color: #ff9d7d; font-weight: bold; }
+            .laboratorio { background: rgba(33, 136, 255, 0.15); border-left: 4px solid var(--azul-lab); color: #79c0ff; font-weight: bold; }
+            
+            .hora-col { background: #161b22; font-weight: bold; color: #8b949e; width: 110px; }
+            .badge-hora { background: #30363d; padding: 3px 6px; border-radius: 4px; font-size: 0.7rem; }
+
+            /* --- RESPONSIVO --- */
+            @media (max-width: 768px) {
+                .menu-toggle { display: block; }
+                .sidebar { position: fixed; height: 100vh; transform: translateX(-100%); }
+                .sidebar.open { transform: translateX(0); }
+                .main-content { padding: 70px 15px 20px; }
+            }
+
+            .logout { padding: 20px; color: #ff6b6b; text-align: center; cursor: pointer; border-top: 1px solid var(--borde); font-weight: bold; }
+        </style>
+    </head>
+    <body>
+
+        <button class="menu-toggle" onclick="toggleMenu()">☰ MENU</button>
+
+        <div class="sidebar" id="sidebar">
+            <div class="user-panel">
+                <div class="avatar" id="avatarInit">U</div>
+                <span>Hola, <span id="userName">Usuario</span></span>
             </div>
-        </div>
-
-        <div id="calificaciones" class="section">
-            <h1>Calificaciones</h1>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Materia</th><th>Código</th><th>Par.</th><th>H2</th><th>H2P</th><th>H3</th><th>H3P</th><th>H4</th><th>H4P</th><th>H5</th><th>H5P</th><th>Final</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td class="subject-name">Operatoria y Endodoncia</td><td>OPE-415</td><td>1</td><td>9</td><td>12</td><td>10</td><td>7</td><td>12</td><td>8</td><td>7</td><td>12</td><td style="color:var(--verde); font-weight:bold;">77</td></tr>
-                        <tr><td class="subject-name">Imagenología Estom. II</td><td>IES-612</td><td>1</td><td>10</td><td>12</td><td>7</td><td>6</td><td>6</td><td>11</td><td>9</td><td>13</td><td style="color:var(--verde); font-weight:bold;">74</td></tr>
-                        <tr><td class="subject-name">Odontología Legal</td><td>OLD-711</td><td>1</td><td>11</td><td>9</td><td>13</td><td>8</td><td>9</td><td>10</td><td>7</td><td>14</td><td style="color:var(--verde); font-weight:bold;">81</td></tr>
-                    </tbody>
-                </table>
+            <div class="nav-menu">
+                <div class="menu-item active" onclick="showSection('inicio', this)">🏠 Inicio</div>
+                <div class="menu-item" onclick="showSection('calificaciones', this)">📊 Calificaciones</div>
+                <div class="menu-item" onclick="showSection('horarios', this)">📅 Horarios</div>
             </div>
-            <p style="font-size: 0.7rem; color: #8b949e; margin-top: 10px;">← Desliza a la derecha para ver todas las notas →</p>
+            <div class="logout" onclick="cerrarSesion()">Cerrar Sesión</div>
         </div>
 
-        <div id="horarios" class="section">
-            <h1>Horario Semanal</h1>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr><th>Hora</th><th>Lun</th><th>Mar</th><th>Mie</th><th>Jue</th><th>Vie</th><th>Sab</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>07:30</td><td class="vacio">---</td><td class="vacio">---</td><td class="vacio">---</td><td class="vacio">---</td><td class="vacio">---</td><td style="background:rgba(240,90,40,0.2)">Ortodoncia (T)</td></tr>
-                        <tr><td>11:30</td><td style="background:rgba(240,90,40,0.2)">Odont. Legal</td><td style="background:rgba(240,90,40,0.2)">Operatoria</td><td style="background:rgba(33,136,255,0.2)">Imagen (L)</td><td style="background:rgba(33,136,255,0.2)">Legal (L)</td><td style="background:rgba(33,136,255,0.2)">Urgen (L)</td><td style="background:rgba(33,136,255,0.2)">Ortodon (L)</td></tr>
-                    </tbody>
-                </table>
+        <div class="main-content">
+            
+            <div id="inicio" class="section active">
+                <h1>Panel de Control</h1>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div style="background: var(--tarjeta); padding: 20px; border-radius: 10px; border-top: 3px solid var(--naranja);">
+                        <h3>Promedio Semestral</h3><p style="font-size: 1.5rem; font-weight: bold;">77.8</p>
+                    </div>
+                    <div style="background: var(--tarjeta); padding: 20px; border-radius: 10px; border-top: 3px solid var(--verde);">
+                        <h3>Sede</h3><p style="font-size: 1.5rem; font-weight: bold;">El Alto</p>
+                    </div>
+                </div>
             </div>
+
+            <div id="calificaciones" class="section">
+                <h1>Mis Calificaciones</h1>
+                <div class="table-container">
+                    <table class="grade-table">
+                        <thead>
+                            <tr>
+                                <th>Asignatura</th><th>Código</th><th>Par.</th><th>H2</th><th>H2P</th><th>H3</th><th>H3P</th><th>H4</th><th>H4P</th><th>H5</th><th>H5P</th><th>Final</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="subject-name">Operatoria y Endodoncia</td><td>OPE-415</td><td>1</td><td>9</td><td>12</td><td>10</td><td>7</td><td>12</td><td>8</td><td>7</td><td>9</td><td class="final-grade">74</td></tr>
+                            <tr><td class="subject-name">Imagenología Estom. II</td><td>IES-612</td><td>1</td><td>10</td><td>12</td><td>7</td><td>6</td><td>6</td><td>11</td><td>9</td><td>13</td><td class="final-grade">74</td></tr>
+                            <tr><td class="subject-name">Odontología Legal y Forense</td><td>OLD-711</td><td>1</td><td>11</td><td>9</td><td>13</td><td>8</td><td>9</td><td>10</td><td>7</td><td>14</td><td class="final-grade">81</td></tr>
+                            <tr><td class="subject-name">Ortodoncia</td><td>ORT-811</td><td>1</td><td>8</td><td>10</td><td>6</td><td>8</td><td>10</td><td>6</td><td>10</td><td>12</td><td class="final-grade">70</td></tr>
+                            <tr><td class="subject-name">Urgencias y Emergencias</td><td>UEO-711</td><td>1</td><td>11</td><td>10</td><td>12</td><td>7</td><td>9</td><td>14</td><td>13</td><td>11</td><td class="final-grade">87</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="horarios" class="section">
+                <h1>Horario Semanal Combinado</h1>
+                <div style="margin-bottom: 10px; font-size: 0.8rem;">
+                    <span style="color: var(--naranja)">■ Teoría</span> &nbsp;&nbsp; 
+                    <span style="color: var(--azul-lab)">■ Laboratorio</span>
+                </div>
+                <div class="horario-container">
+                    <table class="horario-table">
+                        <thead>
+                            <tr>
+                                <th>Hora</th><th>Lunes</th><th>Martes</th><th>Miércoles</th><th>Jueves</th><th>Viernes</th><th>Sábado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="hora-col"><span class="badge-hora">07:30 - 10:00</span></td>
+                                <td>---</td><td>---</td><td>---</td><td>---</td><td>---</td>
+                                <td class="teoria">Ortodoncia (Teoría)</td>
+                            </tr>
+                            <tr>
+                                <td class="hora-col"><span class="badge-hora">10:00 - 13:00</span></td>
+                                <td class="teoria">Odont. Legal (T)</td>
+                                <td>---</td>
+                                <td class="laboratorio">Imagenología (L)<br><small>11:00-13:00</small></td>
+                                <td class="laboratorio">Odont. Legal (L)<br><small>11:30-14:30</small></td>
+                                <td class="laboratorio">Urgencias (L)<br><small>12:00-13:30</small></td>
+                                <td class="teoria">Ortodoncia (T)<br><small>Hasta 12:00</small></td>
+                            </tr>
+                            <tr>
+                                <td class="hora-col"><span class="badge-hora">14:00 - 17:30</span></td>
+                                <td class="laboratorio">Odont. Legal (L)<br><small>14:00-17:00</small></td>
+                                <td class="laboratorio">Operatoria (L)<br><small>14:30-17:30</small></td>
+                                <td class="teoria">Imagenología (T)<br><small>14:00-16:30</small></td>
+                                <td class="laboratorio">Endodoncia (L)<br><small>14:30-16:30</small></td>
+                                <td class="teoria">Urgencias (T)<br><small>15:00-17:40</small></td>
+                                <td class="laboratorio">Ortodoncia (L)<br><small>12:30-16:00</small></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
 
-    </div>
+        <script>
+            // Sesión
+            const user = localStorage.getItem('sesionActiva') || "Estudiante";
+            document.getElementById('userName').innerText = user;
+            document.getElementById('avatarInit').innerText = user.charAt(0).toUpperCase();
 
-    <script>
-        const user = localStorage.getItem('sesionActiva') || "Estudiante";
-        document.getElementById('userName').innerText = user;
-        document.getElementById('avatarInit').innerText = user.charAt(0).toUpperCase();
+            // Menú Hamburguesa
+            function toggleMenu() {
+                document.getElementById('sidebar').classList.toggle('open');
+            }
 
-        function showSection(id, btn) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            btn.classList.add('active');
-        }
-    </script>
-</body>
-</html>
+            // Navegación
+            function showSection(id, btn) {
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+                document.getElementById(id).classList.add('active');
+                btn.classList.add('active');
+                if (window.innerWidth <= 768) toggleMenu();
+            }
+
+            function cerrarSesion() {
+                localStorage.removeItem('sesionActiva');
+                window.location.href = 'login.html';
+            }
+        </script>
+    </body>
+    </html>
